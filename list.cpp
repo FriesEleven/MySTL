@@ -12,7 +12,7 @@ private:
         T data;
         Node *next, *prev;
 
-        //consrruct function of the list node
+        //construct function of the list node
         Node(const T &value, Node *nextnode, Node *prevnode)
             :data(value), next(nextnode), prev(prevnode) {} 
     };
