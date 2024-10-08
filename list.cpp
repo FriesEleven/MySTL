@@ -1,16 +1,15 @@
-#pragma once
 #include <iostream>
 #include <algorithm>
 #include <stdexcept>
 #include <sstream>
 #include <string>
 
-template <typename L>
+template <typename T>
 class List {
 private:
     struct Node
     {
-        T *data;
+        T data;
         Node *next, *prev;
 
         //consrruct function of the list node
@@ -23,7 +22,7 @@ private:
 
 public:
     template <typename L>
-    friend std::ostream &operator<<(std::ostream &os, const List<L> &pt)
+    friend std::ostream &operator<<(std::ostream &os, const List<L> &pt);
 
 public:
     //construct function of the list
@@ -33,7 +32,7 @@ public:
         while(head) {
             Node *temp = head;
             head = head->next;
-            delete[] temp;
+            delete temp;
         }
         tail = nullptr;
         size = 0;
@@ -69,5 +68,82 @@ public:
         return size;
     }
 
-    
+    T& operator[](size_t index) {
+        Node* current = head;
+        for(size_t i = 0; i < index; ++i) {
+            if(!current) {
+                throw std::out_of_range("Index out of the range");
+            }
+            current = current->next;
+        }
+        return current->data;
+    }
+
+    void pop_back() {
+        if(size > 0) {
+            Node* newTail = tail->prev;
+            delete tail;
+            tail = newTail;
+            if(tail) {
+                tail->next = nullptr;
+            } else {
+                head = nullptr;
+            }
+            --size;
+        }
+    }
+
+    void pop_front() {
+        if(size > 0) {
+            Node* newHead = head->next;
+            delete head;
+            head = newHead;
+            if(head) {
+                head->prev = nullptr;
+            } else {
+                tail = nullptr;
+            }
+            --size;
+        }
+    }
+
+    Node* begin() {
+        return head;
+    }
+
+    Node* end() {
+        return nullptr;
+    }
+
+    const Node* begin() const {
+        return head;
+    }
+
+    const Node* end() const {
+        return nullptr;
+    }
+
+    void printElements() {
+        for(Node* current = head; current; current = current->next) {
+            std::cout << current->data << " ";
+        }
+        std::cout << std::endl;
+    }
 };
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const List<T> &pt) {
+    for(typename List<T>::Node *current = pt.head; current; current = current->next) {
+        os << "" << current->data;
+    }
+    os << std::endl;
+    return os;
+}
+
+int main() {
+    List<int> MyList;
+    MyList.push_back(1);
+    MyList.push_front(2);
+    MyList.printElements();
+    return 0;
+}
