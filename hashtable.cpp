@@ -136,6 +136,8 @@ int main() {
     myhashtable.insert(2,1);
     myhashtable.find(2);
     myhashtable.print();
+    myhashtable.insert(3,3);
+    myhashtable.print();
     myhashtable.clear();
     return 0;
 }
